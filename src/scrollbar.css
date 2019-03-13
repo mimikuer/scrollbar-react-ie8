@@ -1,0 +1,52 @@
+.scrollbar-container{
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.scrollbar-view{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollbar-track{
+    position: absolute;
+    top:2px;
+    bottom:2px;
+    right:2px;
+    border-radius: 3px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.scrollbar-track-vertical{
+    width: 6px;
+}
+
+.scrollbar-track-horizontal{
+    height: 6px;
+}
+
+.scrollbar-thumb{
+    position: relative;
+    display: block;
+    border-radius: inherit;
+    cursor:pointer;
+    background:#ccc; /*IE8*/
+    background: rgba(0,0,0,.4);
+    transform: translateZ(0);
+}
+
+.scrollbar-thumb-vertical{
+    width:100%;
+}
+
+.scrollbar-thumb-horizontal{
+    height:100%;
+}
