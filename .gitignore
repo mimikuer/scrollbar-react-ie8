@@ -1,9 +1,0 @@
-.DS_Store
-node_modules
-npm-debug.log
-lib
-dist
-.idea
-.vscode
-index.html
-embed.min.js
