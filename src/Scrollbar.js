@@ -124,7 +124,7 @@ export default class Scrollbar extends Component {
         thumbMinSize: 30,
         hideTracksWhenNotNeeded: true,
         autoHide: true,
-        autoHideTimeout: 1000,
+        autoHideTimeout: 100,
         autoHideDuration: 200,
         autoHeight: false,
         autoHeightMin: 0,
@@ -313,14 +313,19 @@ export default class Scrollbar extends Component {
         addListener(trackVertical, 'mouseleave', this.handleTrackMouseLeave);
         addListener(trackVertical, 'mousedown', this.handleVerticalTrackMouseDown);
 
+        addListener(thumbHorizontal, 'mouseenter', this.handleTrackMouseEnter);
+        addListener(thumbHorizontal, 'mouseleave', this.handleTrackMouseLeave);
         addListener(thumbHorizontal, 'mousedown', this.handleHorizontalThumbMouseDown);
+
+        addListener(thumbVertical, 'mouseenter', this.handleTrackMouseEnter);
+        addListener(thumbVertical, 'mouseleave', this.handleTrackMouseLeave);
         addListener(thumbVertical, 'mousedown', this.handleVerticalThumbMouseDown);
 
         addListener(window, 'resize', this.handleWindowResize);
     }
 
     removeEventListener() {
-        const {view, trackHorizontal, trackVertical, thumbHorizontal} = this.refs;
+        const {view, trackHorizontal, trackVertical, thumbHorizontal, thumbVertical} = this.refs;
         removeListener(view, 'scroll', this.handleScroll);
 
         removeListener(trackHorizontal, 'mouseenter', this.handleTrackMouseEnter);
@@ -331,8 +336,13 @@ export default class Scrollbar extends Component {
         removeListener(trackVertical, 'mouseleave', this.handleTrackMouseLeave);
         removeListener(trackVertical, 'mousedown', this.handleVerticalTrackMouseDown);
 
+        removeListener(thumbHorizontal, 'mouseenter', this.handleTrackMouseEnter);
+        removeListener(thumbHorizontal, 'mouseleave', this.handleTrackMouseLeave);
         removeListener(thumbHorizontal, 'mousedown', this.handleHorizontalThumbMouseDown);
-        removeListener(thumbHorizontal, 'mousedown', this.handleVerticalThumbMouseDown);
+
+        removeListener(thumbVertical, 'mouseenter', this.handleTrackMouseEnter);
+        removeListener(thumbVertical, 'mouseleave', this.handleTrackMouseLeave);
+        removeListener(thumbVertical, 'mousedown', this.handleVerticalThumbMouseDown);
 
         removeListener(window, 'resize', this.handleWindowResize);
 
@@ -399,7 +409,8 @@ export default class Scrollbar extends Component {
     handleScrollStop() {
         const {onScrollStop} = this.props;
         if (onScrollStop) onScrollStop();
-        this.handleScrollStopAutoHide();
+        //滚动停止后，隐藏滚动条
+        //this.handleScrollStopAutoHide();
     }
 
     handleScrollStopAutoHide() {
@@ -570,13 +581,19 @@ export default class Scrollbar extends Component {
     }
 
     showTracks() {
-        const {trackHorizontal, trackVertical} = this.refs;
+        const {trackHorizontal, trackVertical, thumbHorizontal, thumbVertical} = this.refs;
         clearTimeout(this.hideTracksTimeout);
         css(trackHorizontal, {opacity: 1});
         css(trackVertical, {opacity: 1});
 
-        css(trackHorizontal, {filter: alpha(opacity=100)});
-        css(trackVertical, {filter: alpha(opacity=100)});
+        css(trackHorizontal, {filter: "alpha(opacity=100)"});
+        css(trackVertical, {filter: "alpha(opacity=100)"});
+
+        css(thumbHorizontal, {opacity: 1});
+        css(thumbVertical, {opacity: 1});
+
+        css(thumbHorizontal, {filter: "alpha(opacity=100)"});
+        css(thumbVertical, {filter: "alpha(opacity=100)"});
     }
 
     hideTracks() {
@@ -584,14 +601,20 @@ export default class Scrollbar extends Component {
         if (this.scrolling) return;
         if (this.trackMouseOver) return;
         const {autoHideTimeout} = this.props;
-        const {trackHorizontal, trackVertical} = this.refs;
+        const {trackHorizontal, trackVertical, thumbHorizontal, thumbVertical} = this.refs;
         clearTimeout(this.hideTracksTimeout);
         this.hideTracksTimeout = setTimeout(() => {
             css(trackHorizontal, {opacity: 0});
             css(trackVertical, {opacity: 0});
 
-            css(trackHorizontal, {filter: alpha(opacity=0)});
-            css(trackVertical, {filter: alpha(opacity=0)});
+            css(trackHorizontal, {filter: "alpha(opacity=0)"});
+            css(trackVertical, {filter: "alpha(opacity=0)"});
+
+            css(thumbHorizontal, {opacity: 0});
+            css(thumbVertical, {opacity: 0});
+
+            css(thumbHorizontal, {filter: "alpha(opacity=0)"});
+            css(thumbVertical, {filter: "alpha(opacity=0)"});
         }, autoHideTimeout);
     }
 
@@ -732,7 +755,7 @@ export default class Scrollbar extends Component {
             const trackAutoHideStyle = {
                 transition: `opacity ${autoHideDuration}ms`,
                 opacity: 0,
-                filter: alpha(opacity=0)
+                filter: "alpha(opacity=0)"
             };
             trackVerticalStyle = {
                 ...trackVerticalStyle,
@@ -742,6 +765,16 @@ export default class Scrollbar extends Component {
                 ...trackHorizontalStyle,
                 ...trackAutoHideStyle
             };
+
+            thumbHorizontalStyle = {
+                ...thumbHorizontalStyle,
+                ...trackAutoHideStyle
+            }
+
+            thumbVerticalStyle = {
+                ...thumbVerticalStyle,
+                ...trackAutoHideStyle
+            }
         }
 
         const Tag = tagName;

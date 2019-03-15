@@ -13,13 +13,14 @@
     bottom: 0;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
+    word-break: break-all;
 }
 
 .scrollbar-track{
     position: absolute;
-    top:2px;
-    bottom:2px;
-    right:2px;
+    top:0;
+    bottom:0;
+    right:0;
     border-radius: 3px;
     background: transparent;
     overflow: hidden;
